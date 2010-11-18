@@ -102,33 +102,72 @@ def create_member(collective, identity, stompserver, stompuser, stomppass, stomp
     FileUtils.cp(get_random_file("facts"), "etc/facts.yaml")
     FileUtils.cp(get_random_file("classes"), "etc/classes.txt")
 
-    FileUtils.cp_r("#{pluginsource}/.", "plugins/mcollective")
-
     puts "Created a new instance #{identity} in #{instance_home}"
     puts "=" * 40
 end
 
-desc "List the collective members and their statusses"
-task :list  do
+def copy_plugins
+    FileUtils.cd BASEDIR
+    pluginsource  = "#{BASEDIR}/plugins"
+
     get_members.each do |member|
-        puts "#{member}:\t#{member_running?(member) ? 'running' : 'stopped'}"
+        FileUtils.cp_r("#{pluginsource}/.", "#{BASEDIR}/collective/#{member}/plugins/mcollective")
+    end
+
+    FileUtils.cp_r("#{pluginsource}/.", "#{BASEDIR}/client/plugins/mcollective")
+end
+
+def stop_all
+    get_members.each do |member|
+        puts "Stopping member #{member}"
+        stop_member(member)
     end
 end
 
-desc "Starts all collective members"
-task :start do
+def start_all
     get_members.each do |member|
         start_member(member)
         puts "Started #{member} status: #{member_running?(member)}"
     end
 end
 
+def status
+    get_members.each do |member|
+        puts "#{member}:\t#{member_running?(member) ? 'running' : 'stopped'}"
+    end
+end
+
+desc "List the collective members and their statusses"
+task :list  do
+    status
+end
+
+desc "List the collective members and their statusses"
+task :status do
+    status
+end
+
+desc "Starts all collective members"
+task :start do
+    start_all
+end
+
 desc "Stops all collective members"
 task :stop do
-    get_members.each do |member|
-        puts "Stopping member #{member}"
-        stop_member(member)
-    end
+    stop_all
+end
+
+desc "Copies new plugins and restarts all collective members"
+task :update do
+    copy_plugins
+    stop_all
+    start_all
+end
+
+desc "Restarts all collective members"
+task :restart do
+    stop_all
+    start_all
 end
 
 desc "Create a new collective member in the collective subdirectory"
@@ -149,6 +188,8 @@ task :create do
     count.times do |i|
         create_member(collective, "#{hostname}-#{i}", stompserver, stompuser, stomppass, stompport, version)
     end
+
+    copy_plugins
 
     create_member(collective, "client", stompserver, stompuser, stomppass, stompport, version, "#{BASEDIR}/client")
 end
