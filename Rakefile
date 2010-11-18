@@ -77,6 +77,13 @@ def setup_base
     system("git clone -q git://github.com/puppetlabs/marionette-collective.git #{basedir}")
 end
 
+def get_random_file(type)
+    templatedir   = "#{BASEDIR}/templates"
+    files = Dir.entries("#{templatedir}/#{type}").select{|f| f[0,1] != "."}
+
+    File.join(templatedir, type, files[rand(files.size)])
+end
+
 def create_member(collective, identity, stompserver, stompuser, stomppass, stompport, version, instance_home=nil)
     instance_home = "#{BASEDIR}/collective/#{identity}" if instance_home.nil?
     templatedir   = "#{BASEDIR}/templates"
@@ -92,7 +99,8 @@ def create_member(collective, identity, stompserver, stompuser, stomppass, stomp
     render_template("#{templatedir}/server.cfg.erb", "#{instance_home}/etc/server.cfg", binding)
     render_template("#{templatedir}/client.cfg.erb", "#{instance_home}/etc/client.cfg", binding)
 
-    FileUtils.cp("etc/facts.yaml.dist", "etc/facts.yaml")
+    FileUtils.cp(get_random_file("facts"), "etc/facts.yaml")
+    FileUtils.cp(get_random_file("classes"), "etc/classes.txt")
 
     FileUtils.cp_r("#{pluginsource}/.", "plugins/mcollective")
 
