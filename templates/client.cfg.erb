@@ -1,0 +1,15 @@
+topicprefix = /topic/<%= collective %>
+libdir = <%= instance_home %>/plugins
+logfile = <%= BASEDIR %>/logs/<%= identity %>-client.log
+loglevel = debug
+daemonize = 1
+identity = <%= identity %>
+
+# Plugins
+securityprovider = none
+
+connector = stomp
+plugin.stomp.host = <%= stompserver %>
+plugin.stomp.port = <%= stompport %>
+plugin.stomp.user = <%= stompuser %>
+plugin.stomp.password = <%= stomppass %>
