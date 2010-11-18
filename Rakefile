@@ -75,7 +75,7 @@ def setup_base
     FileUtils.mkdir_p "logs"
     FileUtils.mkdir_p "client"
 
-    system("git clone git://github.com/puppetlabs/marionette-collective.git #{basedir}")
+    system("git clone -q git://github.com/puppetlabs/marionette-collective.git #{basedir}")
 end
 
 def create_member(collective, identity, stompserver, stompuser, stomppass, stompport, version, instance_home=nil)
@@ -87,8 +87,8 @@ def create_member(collective, identity, stompserver, stompuser, stomppass, stomp
     FileUtils.mkdir_p instance_home
     FileUtils.cd(instance_home)
 
-    system("git clone file:///#{clonedir} .")
-    system("git checkout #{version}")
+    system("git clone -q file:///#{clonedir} .")
+    system("git checkout -q #{version}")
 
     render_template("#{templatedir}/server.cfg.erb", "#{instance_home}/etc/server.cfg", binding)
     render_template("#{templatedir}/client.cfg.erb", "#{instance_home}/etc/client.cfg", binding)
@@ -96,17 +96,12 @@ def create_member(collective, identity, stompserver, stompuser, stomppass, stomp
     FileUtils.cp("etc/facts.yaml.dist", "etc/facts.yaml")
     FileUtils.cp("#{pluginsource}/security/none.rb", "plugins/mcollective/security/none.rb")
 
-    puts "=" * 40
     puts "Created a new instance #{identity} in #{instance_home}"
     puts "=" * 40
 end
 
 desc "List the collective members and their statusses"
 task :list  do
-
-    puts "=" * 40
-    puts
-
     get_members.each do |member|
         puts "#{member}:\t#{member_running?(member) ? 'running' : 'stopped'}"
     end
@@ -123,6 +118,7 @@ end
 desc "Stops all collective members"
 task :stop do
     get_members.each do |member|
+        puts "Stopping member #{member}"
         stop_member(member)
     end
 end
