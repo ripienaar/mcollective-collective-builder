@@ -1,4 +1,3 @@
-require 'facter'
 require 'erb'
 
 STDOUT.sync = true
@@ -94,7 +93,8 @@ def create_member(collective, identity, stompserver, stompuser, stomppass, stomp
     render_template("#{templatedir}/client.cfg.erb", "#{instance_home}/etc/client.cfg", binding)
 
     FileUtils.cp("etc/facts.yaml.dist", "etc/facts.yaml")
-    FileUtils.cp("#{pluginsource}/security/none.rb", "plugins/mcollective/security/none.rb")
+
+    FileUtils.cp_r("#{pluginsource}/.", "plugins/mcollective")
 
     puts "Created a new instance #{identity} in #{instance_home}"
     puts "=" * 40
