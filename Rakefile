@@ -189,9 +189,9 @@ task :create do
         create_member(collective, "#{hostname}-#{i}", stompserver, stompuser, stomppass, stompport, version)
     end
 
-    copy_plugins
-
     create_member(collective, "client", stompserver, stompuser, stomppass, stompport, version, "#{BASEDIR}/client")
+
+    copy_plugins
 end
 
 desc "Shut down and remove the collective"
