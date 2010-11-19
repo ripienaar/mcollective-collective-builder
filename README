@@ -1,5 +1,5 @@
 Simple tool to create a number of mcollective
 instances running and all pointing at the same
-activemq instance setup in a sub collective
+activemq instance setup in a sub collective.
 
-Work in progress, don't use.
+See http://srt.ly/4q

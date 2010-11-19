@@ -179,6 +179,7 @@ task :create do
     stompport   = ask("Stomp Port", "MC_PORT", "6163")
     version     = ask("MCollective Version", "MC_VERSION", "0.4.10")
     count       = ask("Instances To Create", "MC_COUNT", 10).to_i
+    countstart  = ask("Instance Count Start", "MC_COUNT_START", 0).to_i
     hostname    = `hostname -f`.chomp
 
     # TODO: validate all this stuff
@@ -186,12 +187,24 @@ task :create do
     setup_base
 
     count.times do |i|
-        create_member(collective, "#{hostname}-#{i}", stompserver, stompuser, stomppass, stompport, version)
+        create_member(collective, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, version)
     end
 
     create_member(collective, "client", stompserver, stompuser, stomppass, stompport, version, "#{BASEDIR}/client")
 
     copy_plugins
+
+    puts
+    puts "Created a collective with #{count} members:"
+    puts
+    puts "  Collective Name: #{collective}"
+    puts "       Node Names: #{hostname}-{#{countstart}-#{count + countstart - 1}}"
+    puts "    Stomp Version: #{version}"
+    puts "     Stomp Server: stomp://#{stompuser}:#{stomppass}@#{stompserver}:#{stompport}"
+    puts
+    puts "The collective instances are stored in collective/* and a client is setup in client/"
+    puts
+    puts
 end
 
 desc "Shut down and remove the collective"
