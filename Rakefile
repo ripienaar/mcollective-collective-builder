@@ -202,6 +202,11 @@ task :create do
     puts "    Stomp Version: #{version}"
     puts "     Stomp Server: stomp://#{stompuser}:#{stomppass}@#{stompserver}:#{stompport}"
     puts
+    puts "To recreate this collective use this command:"
+    puts
+    puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} MC_PASSWORD=#{stomppass} \\"
+    puts "   MC_PORT=#{stompport} MC_VERSION=#{version} MC_COUNT=#{count} MC_COUNT_START=#{countstart} rake create"
+    puts
     puts "The collective instances are stored in collective/* and a client is setup in client/"
     puts
     puts
