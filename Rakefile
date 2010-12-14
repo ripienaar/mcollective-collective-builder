@@ -84,7 +84,7 @@ def get_random_file(type)
     File.join(templatedir, type, files[rand(files.size)])
 end
 
-def create_member(collective, identity, stompserver, stompuser, stomppass, stompport, version, instance_home=nil)
+def create_member(collective, identity, stompserver, stompuser, stomppass, stompport, stompssl, version, instance_home=nil)
     instance_home = "#{BASEDIR}/collective/#{identity}" if instance_home.nil?
     templatedir   = "#{BASEDIR}/templates"
     pluginsource  = "#{BASEDIR}/plugins"
@@ -177,6 +177,7 @@ task :create do
     stompuser   = ask("Stomp User", "MC_USER", "mcollective")
     stomppass   = ask("Stomp Password", "MC_PASSWORD", "secret")
     stompport   = ask("Stomp Port", "MC_PORT", "6163")
+    stompssl    = ask("Stomp SSL (y|n)", "MC_SSL", "n")
     version     = ask("MCollective Version", "MC_VERSION", "0.4.10")
     count       = ask("Instances To Create", "MC_COUNT", 10).to_i
     countstart  = ask("Instance Count Start", "MC_COUNT_START", 0).to_i
@@ -187,10 +188,10 @@ task :create do
     setup_base
 
     count.times do |i|
-        create_member(collective, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, version)
+        create_member(collective, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, stompssl, version)
     end
 
-    create_member(collective, "client", stompserver, stompuser, stomppass, stompport, version, "#{BASEDIR}/client")
+    create_member(collective, "client", stompserver, stompuser, stomppass, stompport, stompssl, version, "#{BASEDIR}/client")
 
     copy_plugins
 
@@ -204,8 +205,9 @@ task :create do
     puts
     puts "To recreate this collective use this command:"
     puts
-    puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} MC_PASSWORD=#{stomppass} \\"
-    puts "   MC_PORT=#{stompport} MC_VERSION=#{version} MC_COUNT=#{count} MC_COUNT_START=#{countstart} rake create"
+    puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} "
+    puts "   MC_PASSWORD=#{stomppass} MC_PORT=#{stompport} MC_VERSION=#{version} "
+    puts "   MC_COUNT=#{count} MC_COUNT_START=#{countstart} MC_SSL=#{stompssl} rake create"
     puts
     puts "The collective instances are stored in collective/* and a client is setup in client/"
     puts

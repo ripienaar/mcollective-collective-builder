@@ -9,7 +9,9 @@ identity = <%= identity %>
 securityprovider = none
 
 connector = stomp
-plugin.stomp.host = <%= stompserver %>
-plugin.stomp.port = <%= stompport %>
-plugin.stomp.user = <%= stompuser %>
-plugin.stomp.password = <%= stomppass %>
+plugin.stomp.pool.size = 1
+plugin.stomp.pool.host1 = <%= stompserver %>
+plugin.stomp.pool.port1 = <%= stompport %>
+plugin.stomp.pool.user1 = <%= stompuser %>
+plugin.stomp.pool.password1 = <%= stomppass %>
+plugin.stomp.pool.ssl1 = <%= stompssl == "y" ? "true" : "false" %>
