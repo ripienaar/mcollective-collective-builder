@@ -67,14 +67,14 @@ def get_members
     Dir.entries("#{BASEDIR}/collective").select{|m| (m[0,1] != "." && m != "base")}
 end
 
-def setup_base
+def setup_base(gitrepo, branch)
     basedir = "#{BASEDIR}/collective/base"
     FileUtils.mkdir_p basedir
     FileUtils.mkdir_p "pids"
     FileUtils.mkdir_p "logs"
     FileUtils.mkdir_p "client"
 
-    system("git clone -q git://github.com/puppetlabs/marionette-collective.git #{basedir}")
+    system("git clone -q #{gitrepo} #{basedir} --branch #{branch}")
 end
 
 def get_random_file(type)
@@ -174,18 +174,20 @@ desc "Create a new collective member in the collective subdirectory"
 task :create do
     collective  = ask("Collective Name", "MC_NAME", "mcollectivedev")
     stompserver = ask("Stomp Server", "MC_SERVER", "stomp")
-    stompuser   = ask("Stomp User", "MC_USER", "mcollective")
-    stomppass   = ask("Stomp Password", "MC_PASSWORD", "secret")
     stompport   = ask("Stomp Port", "MC_PORT", "6163")
     stompssl    = ask("Stomp SSL (y|n)", "MC_SSL", "n")
-    version     = ask("MCollective Version", "MC_VERSION", "0.4.10")
+    stompuser   = ask("Stomp User", "MC_USER", "mcollective")
+    stomppass   = ask("Stomp Password", "MC_PASSWORD", "secret")
+    gitrepo     = ask("GIT Source Repository", "MC_SOURCE", "git://github.com/puppetlabs/marionette-collective.git")
+    branch      = ask("Remote branch name", "MC_SOURCE_BRANCH", "master")
+    version     = ask("MCollective Version", "MC_VERSION", branch == "master"? "1.0.0" : branch)
     count       = ask("Instances To Create", "MC_COUNT", 10).to_i
     countstart  = ask("Instance Count Start", "MC_COUNT_START", 0).to_i
     hostname    = `hostname -f`.chomp
 
     # TODO: validate all this stuff
 
-    setup_base
+    setup_base(gitrepo, branch)
 
     count.times do |i|
         create_member(collective, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, stompssl, version)
@@ -205,9 +207,11 @@ task :create do
     puts
     puts "To recreate this collective use this command:"
     puts
-    puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} "
-    puts "   MC_PASSWORD=#{stomppass} MC_PORT=#{stompport} MC_VERSION=#{version} "
-    puts "   MC_COUNT=#{count} MC_COUNT_START=#{countstart} MC_SSL=#{stompssl} rake create"
+    puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} \\"
+    puts "   MC_PASSWORD=#{stomppass} MC_PORT=#{stompport} MC_VERSION=#{version} \\"
+    puts "   MC_COUNT=#{count} MC_COUNT_START=#{countstart} MC_SSL=#{stompssl} \\"
+    puts "   MC_SOURCE=#{gitrepo} \\"
+    puts "   MC_SOURCE_BRANCH=#{branch} rake create"
     puts
     puts "The collective instances are stored in collective/* and a client is setup in client/"
     puts
