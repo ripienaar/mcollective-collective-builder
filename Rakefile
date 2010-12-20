@@ -99,11 +99,20 @@ def create_member(collective, identity, stompserver, stompuser, stomppass, stomp
     render_template("#{templatedir}/server.cfg.erb", "#{instance_home}/etc/server.cfg", binding)
     render_template("#{templatedir}/client.cfg.erb", "#{instance_home}/etc/client.cfg", binding)
 
-    FileUtils.cp(get_random_file("facts"), "etc/facts.yaml")
-    FileUtils.cp(get_random_file("classes"), "etc/classes.txt")
-
     puts "Created a new instance #{identity} in #{instance_home}"
     puts "=" * 40
+end
+
+def copy_facts
+    get_members.each do |member|
+        FileUtils.cp(get_random_file("facts"), "#{BASEDIR}/collective/#{member}/etc/facts.yaml")
+    end
+end
+
+def copy_classes
+    get_members.each do |member|
+        FileUtils.cp(get_random_file("classes"), "#{BASEDIR}/collective/#{member}/etc/classes.txt")
+    end
 end
 
 def copy_plugins
@@ -160,6 +169,8 @@ end
 desc "Copies new plugins and restarts all collective members"
 task :update do
     copy_plugins
+    copy_facts
+    copy_classes
     stop_all
     start_all
 end
@@ -196,6 +207,8 @@ task :create do
     create_member(collective, "client", stompserver, stompuser, stomppass, stompport, stompssl, version, "#{BASEDIR}/client")
 
     copy_plugins
+    copy_facts
+    copy_classes
 
     puts
     puts "Created a collective with #{count} members:"
