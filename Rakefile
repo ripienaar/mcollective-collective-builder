@@ -40,6 +40,8 @@ def member_running?(identity)
 end
 
 def start_member(identity)
+    raise "You need to create a collective first using rake create" if get_members.size == 0
+
     instance_home = "#{BASEDIR}/collective/#{identity}"
 
     return true if member_running?(identity)
@@ -52,6 +54,8 @@ def start_member(identity)
 end
 
 def stop_member(identity)
+    raise "You need to create a collective first using rake create" if get_members.size == 0
+
     pid = member_running?(identity)
 
     return unless pid
@@ -134,6 +138,8 @@ def stop_all
 end
 
 def start_all
+    raise "You need to create a collective first using rake create" if get_members.size == 0
+
     get_members.each do |member|
         start_member(member)
         puts "Started #{member} status: #{member_running?(member)}"
@@ -149,6 +155,7 @@ end
 desc "Sets up a subshell to use the new collective"
 task :shell do
     raise "Don't know what shell to run you have no SHELL environment variable" unless ENV.include?("SHELL")
+    raise "You need to create a collective first using rake create" if get_members.size == 0
 
     ENV["MCOLLECTIVE_EXTRA_OPTS"]= "--config=#{BASEDIR}/client/etc/client.cfg"
     ENV["RUBYLIB"] = "#{BASEDIR}/client/lib"
@@ -178,6 +185,8 @@ end
 
 desc "Starts all collective members"
 task :start do
+    raise "You need to create a collective first using rake create" if get_members.size == 0
+
     start_all
 end
 
