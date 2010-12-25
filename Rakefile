@@ -146,6 +146,26 @@ def status
     end
 end
 
+desc "Sets up a subshell to use the new collective"
+task :shell do
+    raise "Don't know what shell to run you have no SHELL environment variable" unless ENV.include?("SHELL")
+
+    ENV["MCOLLECTIVE_EXTRA_OPTS"]= "--config=#{BASEDIR}/client/etc/client.cfg"
+    ENV["RUBYLIB"] = "#{BASEDIR}/client/lib"
+
+    puts
+    puts "Running #{ENV['SHELL']} to start a subshell with MCOLLECTIVE_EXTRA_OPTS and RUBYLIB set"
+    puts
+    puts "Please run the following once started: "
+    puts
+    puts "    PATH=`pwd`/client:$PATH"
+    puts
+    puts "To return to your normal shell and collective just type exit"
+    puts
+
+    system("#{ENV["SHELL"]}")
+end
+
 desc "List the collective members and their statusses"
 task :list  do
     status
@@ -228,6 +248,8 @@ task :create do
     puts
     puts "The collective instances are stored in collective/* and a client is setup in client/"
     puts
+    puts "Use rake start to start the collective, rake -T to see commands available to start,"
+    puts "stop and update it."
     puts
 end
 
