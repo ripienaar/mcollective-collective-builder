@@ -163,7 +163,10 @@ task :stompserver do
 
     FileUtils.mkdir_p "logs"
 
-    system("/usr/bin/stompserver -C etc/stompserver.yaml")
+    system("/usr/bin/stompserver --config etc/stompserver.conf")
+
+    puts
+    puts "Stompserver terminated use rake clean to clean up logs etc"
 end
 
 desc "Sets up a subshell to use the new collective"
