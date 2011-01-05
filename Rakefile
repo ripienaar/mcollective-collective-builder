@@ -152,6 +152,20 @@ def status
     end
 end
 
+desc "Start a ruby based stompserver on localhost:6163"
+task :stompserver do
+    raise "Please install stompserver rubygem that includes /usr/bin/stompserver" unless File.exist?("/usr/bin/stompserver")
+
+    puts
+    puts "Starting the Ruby Stompserver on localhost:6163 press ^C to terminate"
+    puts "====================================================================="
+    puts
+
+    FileUtils.mkdir_p "logs"
+
+    system("/usr/bin/stompserver -C etc/stompserver.yaml")
+end
+
 desc "Sets up a subshell to use the new collective"
 task :shell do
     raise "Don't know what shell to run you have no SHELL environment variable" unless ENV.include?("SHELL")
@@ -220,7 +234,7 @@ task :create do
     stomppass   = ask("Stomp Password", "MC_PASSWORD", "secret")
     gitrepo     = ask("GIT Source Repository", "MC_SOURCE", "git://github.com/puppetlabs/marionette-collective.git")
     branch      = ask("Remote branch name", "MC_SOURCE_BRANCH", "master")
-    version     = ask("MCollective Version", "MC_VERSION", branch == "master"? "1.0.0" : branch)
+    version     = ask("MCollective Version", "MC_VERSION", branch == "master"? "master" : branch)
     count       = ask("Instances To Create", "MC_COUNT", 10).to_i
     countstart  = ask("Instance Count Start", "MC_COUNT_START", 0).to_i
     hostname    = `hostname -f`.chomp

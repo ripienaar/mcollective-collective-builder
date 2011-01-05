@@ -1,0 +1,3 @@
+:logdir: log
+:debug: true
+:port: 6163
