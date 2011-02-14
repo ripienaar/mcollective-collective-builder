@@ -88,7 +88,7 @@ def get_random_file(type)
     File.join(templatedir, type, files[rand(files.size)])
 end
 
-def create_member(collective, identity, stompserver, stompuser, stomppass, stompport, stompssl, version, instance_home=nil)
+def create_member(collective, subcollectives, identity, stompserver, stompuser, stomppass, stompport, stompssl, version, instance_home=nil)
     instance_home = "#{BASEDIR}/collective/#{identity}" if instance_home.nil?
     templatedir   = "#{BASEDIR}/templates"
     pluginsource  = "#{BASEDIR}/plugins"
@@ -232,6 +232,7 @@ end
 desc "Create a new collective member in the collective subdirectory"
 task :create do
     collective  = ask("Collective Name", "MC_NAME", "mcollectivedev")
+    collectives = ask("Sub-Collective Names", "MC_SUB", "subdev1,subdev2")
     stompserver = ask("Stomp Server", "MC_SERVER", "stomp")
     stompport   = ask("Stomp Port", "MC_PORT", "6163")
     stompssl    = ask("Stomp SSL (y|n)", "MC_SSL", "n")
@@ -249,10 +250,10 @@ task :create do
     setup_base(gitrepo, branch)
 
     count.times do |i|
-        create_member(collective, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, stompssl, version)
+        create_member(collective, collectives, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, stompssl, version)
     end
 
-    create_member(collective, "client", stompserver, stompuser, stomppass, stompport, stompssl, version, "#{BASEDIR}/client")
+    create_member(collective, collectives, "client", stompserver, stompuser, stomppass, stompport, stompssl, version, "#{BASEDIR}/client")
 
     copy_plugins
     copy_facts

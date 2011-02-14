@@ -1,4 +1,6 @@
-topicprefix = /topic/<%= collective %>
+topicprefix = /topic/
+collectives = <%= collective %>,<%= arr = subcollectives.split(/,/); arr[ rand(arr.size) ] %>
+main_collective = <%= collective %>
 libdir = <%= instance_home %>/plugins
 logfile = <%= BASEDIR %>/logs/<%= identity %>-server.log
 loglevel = debug
