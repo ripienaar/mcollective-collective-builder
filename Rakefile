@@ -287,3 +287,19 @@ task :clean => [:stop] do
     CLEANFILES = ["collective", "pids", "logs", "client"]
     FileUtils.rm_rf(CLEANFILES)
 end
+
+desc "List all the available Rake tasks and actions"
+task :help do
+    rake_task = Rake::Task
+
+    puts
+    puts "All available tasks and actions:"
+    puts
+
+    rake_task.tasks.each do |task|
+        puts "   %-15s - %s" % [task, task.comment]
+    end
+
+    puts
+end
+
