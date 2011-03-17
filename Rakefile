@@ -274,7 +274,7 @@ task :create do
     puts
     puts "The collective instances are stored in collective/* and a client is setup in client/"
     puts
-    puts "Use rake start to start the collective, rake -T to see commands available to start,"
+    puts "Use rake start to start the collective, rake help to see commands available to start,"
     puts "stop and update it."
     puts
 end
