@@ -154,7 +154,9 @@ end
 
 desc "Start a ruby based stompserver on localhost:6163"
 task :stompserver do
-    raise "Please install stompserver rubygem that includes /usr/bin/stompserver" unless File.exist?("/usr/bin/stompserver")
+    `which stompserver >/dev/null 2>/dev/null`
+
+    raise "Please install stompserver rubygem" unless $?.exitstatus == 0
 
     puts
     puts "Starting the Ruby Stompserver on localhost:6163 press ^C to terminate"
@@ -163,7 +165,7 @@ task :stompserver do
 
     FileUtils.mkdir_p "logs"
 
-    system("/usr/bin/stompserver --config etc/stompserver.conf")
+    system("stompserver --config etc/stompserver.conf")
 
     puts
     puts "Stompserver terminated use rake clean to clean up logs etc"
