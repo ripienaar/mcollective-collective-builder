@@ -16,29 +16,13 @@ module MCollective
             end
 
             # Encodes a reply
-            def encodereply(sender, target, msg, requestid, filter={})
-                @log.debug("Encoded a message for request #{requestid}")
-
-                YAML.dump({:senderid => @config.identity,
-                           :requestid => requestid,
-                           :senderagent => sender,
-                           :msgtarget => target,
-                           :msgtime => Time.now.to_i,
-                           :body => msg})
+            def encodereply(sender, target, msg, requestid, requestcallerid=nil)
+                YAML.dump(create_reply(requestid, sender, target, msg))
             end
 
             # Encodes a request msg
             def encoderequest(sender, target, msg, requestid, filter={})
-                @log.debug("Encoding a request for '#{target}' with request id #{requestid}")
-                request = {:body => msg,
-                           :senderid => @config.identity,
-                           :requestid => requestid,
-                           :msgtarget => target,
-                           :filter => filter,
-                           :msgtime => Time.now.to_i}
-
-                # if we're in use by a client add the callerid to the main client hashes
-                request[:callerid] = callerid if @initiated_by == :client
+                request = create_request(requestid, target, filter, msg, @initiated_by)
 
                 YAML.dump(request)
             end

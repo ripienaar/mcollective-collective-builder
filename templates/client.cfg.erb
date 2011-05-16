@@ -1,4 +1,6 @@
-topicprefix = /topic/<%= collective %>
+collectives = <%= collective %>,<%= subcollectives %>
+main_collective = <%= collective %>
+topicprefix = /topic/
 libdir = <%= instance_home %>/plugins
 rpchelptemplate = <%= instance_home %>/etc/rpc-help.erb
 logfile = <%= BASEDIR %>/logs/<%= identity %>-client.log
