@@ -272,7 +272,7 @@ task :create do
     puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} \\"
     puts "   MC_PASSWORD=#{stomppass} MC_PORT=#{stompport} MC_VERSION=#{version} \\"
     puts "   MC_COUNT=#{count} MC_COUNT_START=#{countstart} MC_SSL=#{stompssl} \\"
-    puts "   MC_SOURCE=#{gitrepo} \\"
+    puts "   MC_SOURCE=#{gitrepo} MC_SUB=#{collectives}\\"
     puts "   MC_SOURCE_BRANCH=#{branch} rake create"
     puts
     puts "The collective instances are stored in collective/* and a client is setup in client/"
