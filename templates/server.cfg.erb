@@ -10,13 +10,13 @@ identity = <%= identity %>
 # Plugins
 securityprovider = none
 
-connector = stomp
-plugin.stomp.pool.size = 1
-plugin.stomp.pool.host1 = <%= stompserver %>
-plugin.stomp.pool.port1 = <%= stompport %>
-plugin.stomp.pool.user1 = <%= stompuser %>
-plugin.stomp.pool.password1 = <%= stomppass %>
-plugin.stomp.pool.ssl1 = <%= stompssl == "y" ? "true" : "false" %>
+connector = activemq
+plugin.activemq.pool.size = 1
+plugin.activemq.pool.1.host = <%= stompserver %>
+plugin.activemq.pool.1.port = <%= stompport %>
+plugin.activemq.pool.1.user = <%= stompuser %>
+plugin.activemq.pool.1.password = <%= stomppass %>
+plugin.activemq.pool.1.ssl = <%= stompssl == "y" ? "true" : "false" %>
 
 factsource = yaml
 plugin.yaml = <%= instance_home %>/etc/facts.yaml
