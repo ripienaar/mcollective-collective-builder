@@ -10,6 +10,9 @@ identity = <%= identity %>
 # Plugins
 securityprovider = none
 
+direct_addressing = yes
+direct_addressing_threshold = 5
+
 connector = activemq
 plugin.activemq.pool.size = 1
 plugin.activemq.pool.1.host = <%= stompserver %>
