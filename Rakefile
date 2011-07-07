@@ -142,6 +142,9 @@ def start_all
 
     get_members.each do |member|
         start_member(member)
+
+        sleep 0.5
+
         puts "Started #{member} status: #{member_running?(member)}"
     end
 end
