@@ -34,7 +34,11 @@ def member_running?(identity)
     return false unless pid
 
     # TODO: actually verify the cmdline is mcollective?
-    return pid.to_i if File.exist?("/proc/#{pid}")
+    if File.directory?("/proc")
+      return pid.to_i if File.exist?("/proc/#{pid}")
+    else
+      return pid.to_i if `ps -o pid`.split("\n").map {|p| p.to_i}.include?(p.to_i)
+    end
 
     false
 end
