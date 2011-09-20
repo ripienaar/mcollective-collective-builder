@@ -21,8 +21,8 @@ module MCollective
             end
 
             # Encodes a request msg
-            def encoderequest(sender, msg, requestid, filter, target_agent, target_collective)
-                request = create_request(requestid, filter, msg, @initiated_by, target_agent, target_collective)
+            def encoderequest(sender, msg, requestid, filter, target_agent, target_collective, ttl=60)
+                request = create_request(requestid, filter, msg, @initiated_by, target_agent, target_collective, ttl)
 
                 YAML.dump(request)
             end
