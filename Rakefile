@@ -246,7 +246,7 @@ task :create do
     stompuser   = ask("Stomp User", "MC_USER", "mcollective")
     stomppass   = ask("Stomp Password", "MC_PASSWORD", "secret")
     gitrepo     = ask("GIT Source Repository", "MC_SOURCE", "git://github.com/puppetlabs/marionette-collective.git")
-    branch      = ask("Remote branch name", "MC_SOURCE_BRANCH", "master")
+    branch      = ask("Remote branch name", "MC_SOURCE_BRANCH", "1.2.x")
     version     = ask("MCollective Version", "MC_VERSION", branch == "master"? "master" : branch)
     count       = ask("Instances To Create", "MC_COUNT", 10).to_i
     countstart  = ask("Instance Count Start", "MC_COUNT_START", 0).to_i
