@@ -82,7 +82,7 @@ def setup_base(gitrepo, branch)
     FileUtils.mkdir_p "logs"
     FileUtils.mkdir_p "client"
 
-    system("git clone -q #{gitrepo} #{basedir} --branch #{branch}")
+    raise "Could not clone git repository." unless system("git clone -q #{gitrepo} #{basedir} --branch #{branch}")
 end
 
 def get_random_file(type)
@@ -254,17 +254,31 @@ task :create do
 
     # TODO: validate all this stuff
 
-    setup_base(gitrepo, branch)
+    begin
+        setup_base(gitrepo, branch)
 
-    count.times do |i|
-        create_member(collective, collectives, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, stompssl, version)
+        count.times do |i|
+            create_member(collective, collectives, "#{hostname}-#{countstart + i}", stompserver, stompuser, stomppass, stompport, stompssl, version)
+        end
+
+        create_member(collective, collectives, "client", stompserver, stompuser, stomppass, stompport, stompssl, version, "#{BASEDIR}/client")
+
+        copy_plugins
+        copy_facts
+        copy_classes
+    rescue Exception => e
+        puts "#{e} #{e.class}"
+        puts "To retry creating this collective, use this command:"
+        puts
+        puts "   MC_NAME=#{collective} MC_SERVER=#{stompserver} MC_USER=#{stompuser} \\"
+        puts "   MC_PASSWORD=#{stomppass} MC_PORT=#{stompport} MC_VERSION=#{version} \\"
+        puts "   MC_COUNT=#{count} MC_COUNT_START=#{countstart} MC_SSL=#{stompssl} \\"
+        puts "   MC_SOURCE=#{gitrepo} MC_SUB=#{collectives}\\"
+        puts "   MC_SOURCE_BRANCH=#{branch} rake create"
+        puts
+        puts "Creation of collective failed"
+        exit 1
     end
-
-    create_member(collective, collectives, "client", stompserver, stompuser, stomppass, stompport, stompssl, version, "#{BASEDIR}/client")
-
-    copy_plugins
-    copy_facts
-    copy_classes
 
     puts
     puts "Created a collective with #{count} members:"
