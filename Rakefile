@@ -48,7 +48,7 @@ def start_member(identity)
 
     FileUtils.cd(instance_home)
 
-    system("ruby -I #{instance_home}/lib mcollectived.rb --config #{instance_home}/etc/server.cfg --pidfile #{BASEDIR}/pids/#{identity}.pid")
+    system("ruby -I #{instance_home}/lib bin/mcollectived --config #{instance_home}/etc/server.cfg --pidfile #{BASEDIR}/pids/#{identity}.pid")
 
     FileUtils.cd(BASEDIR)
 end
