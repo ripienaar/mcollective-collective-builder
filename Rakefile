@@ -66,7 +66,9 @@ def stop_member(identity)
 
     Process.kill(2, pid.to_i)
 
-    FileUtils.rm("#{BASEDIR}/pids/#{identity}.pid")
+    pidfile = "#{BASEDIR}/pids/#{identity}.pid"
+
+    FileUtils.rm(pidfile) if File.exist?(pidfile)
 end
 
 def get_members
